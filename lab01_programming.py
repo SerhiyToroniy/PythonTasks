@@ -1,8 +1,8 @@
 def k_nums(n):
      if n <= 0:
-          return
+          raise Exception("N should be natural number!")
      print(1) #exception
-     i = 45 #iterator
+     i = 1 #iterator
      count = 1 # counre for first Kaprekar's nums
      while True:
           if count == n:
