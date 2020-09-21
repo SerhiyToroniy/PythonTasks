@@ -1,7 +1,5 @@
 def k_nums(n):
-     if n <= 0:
-          raise Exception("N should be natural number!")
-     print(1) #exception
+     print (1) #exception
      i = 1 #iterator
      count = 1 # counre for first Kaprekar's nums
      while True:
@@ -29,4 +27,13 @@ def k_nums(n):
                          count += 1
                b = "" #update right part
           i += 1
-k_nums(int(input("Input N: "))) #call the function
+def validation():
+     check = False
+     while not check:
+          temp = int(input("Input N: "))
+          check = True
+          if temp <= 0:
+               check = False
+               print("N must be natural!")
+     k_nums(temp)
+validation()
