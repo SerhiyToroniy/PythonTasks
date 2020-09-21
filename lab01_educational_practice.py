@@ -10,6 +10,8 @@ def transfer_to_binary(x): #the function transfer decimal nums to binary
 def count_nums(N, K):    #the function counts suitable nums
     i = 1 #a condition from the task
     zero_count = global_count = 0 #global_count counts suitable nums
+    if int(N)>=109 or int(K) >= 109 or int(N) < 2 or int(K) < 1:
+        raise ValueError
     while i != int(N):
         bin_num = transfer_to_binary(i) #call the function
         for j in bin_num: # counts zero in binary num
@@ -31,9 +33,16 @@ def condition_acsses(s):    #the function check correct input data
             n += z #add symbols to LEFT num (using concatenation)
         else:
             k += z #add symbols to RIGHT num (using concatenation)
-    if float(n) % 1 != 0 or float(k) % 1 != 0:
-        raise Exception("N and K should be integer!")
-    elif int(n) > 109 or int(k) > 109 or int(n) < 1 or int(k) < 1:
-        raise Exception("N and K should be natural numbers and lower than 109!")
     count_nums(n, k)#call other function
-condition_acsses(input("Input N and K using \'SPACE\': "))
+
+def validation():
+    check  = False
+    while not check:
+        try:
+            condition_acsses(input("Input N and K using \'SPACE\': "))
+            check = True
+        except ValueError:
+            check = False
+            print("Input correct data!")
+
+validation()
