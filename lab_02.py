@@ -2,7 +2,7 @@ import random #for generating random nums
 
 def find_demical(binary):
     i = x = 1
-    if int(binary) == 0:#exceprion
+    if int(binary) == 0: #exception
         print(0)
         return
     while True:
@@ -12,10 +12,10 @@ def find_demical(binary):
             bina += str(b)
             x //= 2
         bina = bina[::-1]
-        if int(bina) == int(binary):#to ignore "0" in the begining of each num
+        if int(bina) == int(binary): #to ignore "0" in the begining of each num
             return i #return decimal num
         i += 1
-        x = i#uodating x
+        x = i #updating x
 
 def create_z(x, y, N):
     z = []
