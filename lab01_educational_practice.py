@@ -10,7 +10,7 @@ def transfer_to_binary(x): #the function transfer decimal nums to binary
 def count_nums(N, K):    #the function counts suitable nums
     i = 1 #a condition from the task
     zero_count = global_count = 0 #global_count counts suitable nums
-    if int(N)>=109 or int(K) >= 109 or int(N) < 2 or int(K) < 1:
+    if int(N)>=109 or int(K) >= 109 or int(N) < 1 or int(K) < 1 or float(N) % int(N)!= 0 or float(K) % int(K) != 0:
         raise ValueError
     while i != int(N):
         bin_num = transfer_to_binary(i) #call the function
@@ -43,6 +43,6 @@ def validation():
             check = True
         except ValueError:
             check = False
-            print("Input correct data!")
+            print("N and K must be natural, lower than 109 and bigger than 1!")
 
 validation()
