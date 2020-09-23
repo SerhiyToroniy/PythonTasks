@@ -2,7 +2,7 @@ import random #for generating random nums
 
 def find_demical(binary):
     i = x = 1
-    if int(binary) == 0: #exception
+    if int(binary) == 0:#exceprion
         print(0)
         return
     while True:
@@ -12,10 +12,10 @@ def find_demical(binary):
             bina += str(b)
             x //= 2
         bina = bina[::-1]
-        if int(bina) == int(binary): #to ignore "0" in the begining of each num
+        if int(bina) == int(binary):#to ignore "0" in the begining of each num
             return i #return decimal num
         i += 1
-        x = i #updating x
+        x = i#uodating x
 
 def create_z(x, y, N):
     z = []
@@ -38,10 +38,14 @@ def input_with_N():
     x = []
     y = []
     N = int(input("Input N: "))
+    a = int(input("From: "))
+    b = int(input("To: "))
+    if a >= b:
+        raise NameError
     for i in range(N):#generate nums for "x"
-        x.append(random.randint(-1000,1000))
+        x.append(random.randint(a,b))
     for j in range(N):#generate nums for "y"
-        y.append(random.randint(-1000,1000))
+        y.append(random.randint(a,b))
     result = create_z(x, y, N)
     return result
 
@@ -85,5 +89,8 @@ def valide_input_data():
         except IndexError:
             check = False
             print("Sizes of lists must be same!")
+        except NameError:
+            check = False
+            print("\"From\" must be lower than \"To\"!")
 
 valide_input_data()#call a function to validate data
