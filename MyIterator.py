@@ -7,35 +7,34 @@ class MyIterator:
         return self
 
     def __next__(self): #return next iterator
-        if self.counter < self.limit:   return self.counter
-        else:   raise StopIteration
+        while self.limit > 0:
+            if self.counter == 1:
+                self.counter+=1
+                self.limit-=1
+                return self.counter-1
+            P = str(self.counter * self.counter)
+            a = b = ""  # a - left part / b - right part
+            z = k = 1  # z ignore left part for correct creatting right part / k remember left part's len
+            for j in P:
+                a += j  # add symbols from right to left
+                if a == P:  continue
+                for h in P:
+                    if z > 0:  # z is used for the independece of k
+                        z -= 1
+                        continue
+                    b += h
+                k += 1
+                z = k
+                if int(a) + int(b) == self.counter and int(a) != 0 and int(b) != 0:
+                    self.limit -= 1
+                    self.counter+=1
+                    return self.counter-1
+                b = ""
+            self.counter += 1
+        raise StopIteration
 
-def kaprekars_nums(): #the main function
-    n = int(input("Input N: "))
-    while n < 1:
-        n = int(input("N must be a natural number: "))
-    print(1)  # exception
-    i = MyIterator(n)  # iterator
-    count = 1  # counre for first Kaprekar's nums
-    while True:
-        if count == n:  return
-        P = str(i.counter * i.counter)
-        a = b = ""  # a - left part / b - right part
-        z = k = 1  # z ignore left part for correct creatting right part / k remember left part's len
-        for j in P:
-            a += j  # add symbols from right to left
-            if a == P:  continue
-            for h in P:
-                if z > 0:  # z is used for the independece of k
-                    z -= 1
-                    continue
-                b += h
-            k += 1
-            z = k
-            int_a = int(a)  # str -> int
-            int_b = int(b)
-            if int_a + int_b == i.counter and int_a != 0 and int_b != 0:
-                print(i.counter)
-                count += 1
-            b = ""  # update right part
-        i.counter += 1
+def validate():
+    count = int(input("Input N: "))
+    while count < 1: count = int(input("N must be a natural number: "))
+    for i in MyIterator(count):
+        print(i)
