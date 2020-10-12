@@ -33,7 +33,7 @@ class Validation:
         count = 0
         for i in var:
             if i == " ": count += 1
-        if count > limit:   print("Too many dots in", var, "!")
+        if count > limit:   print("Too many space in", var, "!")
         return count == limit
 
     @staticmethod
