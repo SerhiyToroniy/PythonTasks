@@ -2,14 +2,26 @@ class Validation:
 
     @staticmethod
     def digit_check(var):
-        if not var.isdigit():     print(var, "'s not a number!")
+        count = 0
+        for i in var:
+            if i == ".": count += 1
+        if not count <= 1:
+            print("Too many dots in",var,"!")
+            return False
+        save = ""
+        if count == 1:
+            for i in var:
+                if i != '.':    save+=i
+            var = save
+        else:
+            if not var.isdigit():     print(var, "'s not a number!")
         return var.isdigit()
 
     @staticmethod
     def low_up_limit_check(var, low = 0, up = 10**10):
         if float(var) < low:    print(var,"must be bigger than",low,"!")
-        if float(var) > int(up):    print(var,"must be lower than",up,"!")
-        return low < float(var) <= int(up)
+        if float(var) > float(up):    print(var,"must be lower than",up,"!")
+        return low < float(var) <= float(up)
 
     @staticmethod
     def char_check(var):
@@ -21,7 +33,7 @@ class Validation:
         count = 0
         for i in var:
             if i == " ": count += 1
-        if count > limit:   print("Too many spaces in",var,"!")
+        if count > limit:   print("Too many dots in", var, "!")
         return count == limit
 
     @staticmethod
