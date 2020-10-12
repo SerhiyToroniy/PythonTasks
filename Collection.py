@@ -2,6 +2,7 @@ import operator #import operator to use it in the sort method
 import os.path
 from SwiftTransfer import * #import class SwiftTransfer
 from Validation import *
+from decimal import Decimal
 
 class Collection:
 
@@ -98,16 +99,22 @@ class Collection:
         if not check:   print("We couldn't find an object with this ID: ",ident,"!")
         return self.data
 
-def file_to_arr(mas, File): #the main function to get data from file
+def file_to_arr(mas, File, FileName): #the main function to get data from file
     lst = File.read().split("\n") #make a list of lines
+    if lst[0] == "":
+        print(FileName,"doesn't consist any data!")
+        return None
     temp = SwiftTransfer()
     j = 0
     while j != len(lst):
         for i in dir(temp):
             if i[0]+i[1]!="ge" and i[0]+i[1]!="se" and i[0]+i[1]!="__":
+                if i.upper().find("AMOUNT")!= -1:    lst[j] = str(round(Decimal(float(lst[j])),2))
                 setattr(temp, i, lst[j])
                 j += 1
-        mas.add(temp)
+        if validate_obj(temp):
+            mas.add(temp)
+        else: print("Object with name",str(temp.getACCOUNT_HOLDER()),"was skipped due to not valid data!")
         temp = SwiftTransfer()#create a new SwiftTransfer object every time
 
 def arr_to_file(lst, File_name):
@@ -122,38 +129,41 @@ def menu(lst, File_name):
         choice = input("1 - find an object by inputed data\n2 - sort a collection by inputed data\n3 - delete object from the collection by id\n4 - add an object to the collection\n5 - edit an object in the collection by id\nNumber is your choice: ")
         if choice != "1" and choice != "2" and choice != "3" and choice != "4" and choice != "5":   break
         if choice == "1":
+            if os.stat(File_name).st_size == 0 or lst.len() == 0:
+                print("Your data file is empty as well as array!")
+                continue
             lst.search(input("SEARCH: "))
-            if os.stat(File_name).st_size == 0:
-                print("Your data file is empty!")
+            if os.stat(File_name).st_size == 0 or lst.len() == 0:
+                print("Your data file is empty as well as array!")
                 continue
         if choice == "2":
-            if os.stat(File_name).st_size == 0:
-                print("Your data file is empty!")
+            if os.stat(File_name).st_size == 0 or lst.len() == 0:
+                print("Your data file is empty as well as array!")
                 continue
             temp = lst.sort(input("SORT BY: "))
             arr_to_file(temp, File_name)
             for i in temp: print(i,"\n")
         if choice == "3":
-            if os.stat(File_name).st_size == 0:
-                print("Your data file is empty!")
+            if os.stat(File_name).st_size == 0 or lst.len() == 0:
+                print("Your data file is empty as well as array!")
                 continue
             temp = lst.delete_by_id(input("Input ID to delete objects: "))
             arr_to_file(temp, File_name)
             for i in temp: print(i,"\n")
         if choice == "4":
             lst.add_inputed()
-            if validate_and_run(lst):
+            if validate_lst(lst):
                 lst.display()
                 arr_to_file(lst, File_name)
             else: lst.remove(lst[lst.len()-1])
         if choice == "5":
-            if os.stat(File_name).st_size == 0:
-                print("Your data file is empty!")
+            if os.stat(File_name).st_size == 0 or lst.len() == 0:
+                print("Your data file is empty as well as array!")
                 continue
             save = []
             for i in lst:   save.append(i)
             lst.edit_by_id(input("EDIT BY ID: "))
-            if validate_and_run(lst):
+            if validate_lst(lst):
                 lst.display()
                 arr_to_file(lst, File_name)
             else:
@@ -162,23 +172,22 @@ def menu(lst, File_name):
                 lst.display()
                 arr_to_file(lst, File_name)
 
-def validate_and_run(lst): #the main validation function
+def validate_obj(obj):
     try:
-        for i in range(lst.len()-1):  # check every object from data.txt
-            if not Validation().digit_check(lst[i].getAMOUNT()) or not Validation().low_up_limit_check(lst[i].getAMOUNT(), -1):
-                raise TypeError
-            if not Validation().digit_check(lst[i].getID()) or not Validation().low_up_limit_check(lst[i].getID(), -1):
-                raise TypeError
-            if not Validation().digit_check(lst[i].getFEE_AMOUNT()) or not Validation().low_up_limit_check(lst[i].getFEE_AMOUNT(), -1, lst[i].getAMOUNT()):
-                raise TypeError
-            if not Validation().char_check(lst[i].getCURRENCY()) or not Validation().space_count(lst[i].getCURRENCY(), 0):
-                raise TypeError
-            if not Validation().date_check(lst[i].getPAYMENT_DATE()):
-                raise TypeError
-            if not Validation().iban_number_check(lst[i].getIBAN_NUMBER()):
-                raise TypeError
-            if not Validation().char_check(lst[i].getACCOUNT_HOLDER()) or not Validation().space_count(lst[i].getACCOUNT_HOLDER(), 1):
-                raise TypeError
+        if not Validation().digit_check(obj.getAMOUNT()) or not Validation().low_up_limit_check(obj.getAMOUNT(), -1):   raise TypeError
+        if not Validation().digit_check(obj.getID()) or not Validation().low_up_limit_check(obj.getID(), -1):   raise TypeError
+        if not Validation().digit_check(obj.getFEE_AMOUNT()) or not Validation().low_up_limit_check(obj.getFEE_AMOUNT(), -1, obj.getAMOUNT()):  raise TypeError
+        if not Validation().char_check(obj.getCURRENCY()) or not Validation().space_count(obj.getCURRENCY(),0): raise TypeError
+        if not Validation().date_check(obj.getPAYMENT_DATE()):  raise TypeError
+        if not Validation().iban_number_check(obj.getIBAN_NUMBER()):    raise TypeError
+        if not Validation().char_check(obj.getACCOUNT_HOLDER()) or not Validation().space_count(obj.getACCOUNT_HOLDER(), 1):    raise TypeError
+    except (TypeError, ValueError): return False
+    except AttributeError:  return False
+    return True
+
+def validate_lst(lst): #the main validation function
+    try:
+        for i in range(lst.len()-1):  validate_obj(lst[i])
     except (TypeError,ValueError):
         print("\n=[Make sure, data type is correct and try again!]=\n")
         return False
@@ -190,11 +199,9 @@ def validate_and_run(lst): #the main validation function
 #main
 arr = Collection()
 file_name = input("Input name of data file: ")
-if not os.path.exists(file_name):
-    print("FILE \"",file_name,"\" DOESN'T EXIST!")
-elif os.stat(file_name).st_size != 0:
+if not os.path.exists(file_name):   print("FILE \"",file_name,"\" DOESN'T EXIST!")
+else:
     file = open(file_name)
-    file_to_arr(arr, file)
+    file_to_arr(arr, file, file_name)
     file.close()
-    if validate_and_run(arr):   menu(arr, file_name)
-else:     print("FILE \"",file_name,"\" IS EMPTY!")
+    menu(arr, file_name)
