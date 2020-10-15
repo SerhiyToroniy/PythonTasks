@@ -1,7 +1,8 @@
 import operator #import operator to use it in the sort method
 import os.path
 from SwiftTransfer import * #import class SwiftTransfer
-from Validation import *
+from Validation_with_decorators import *
+# from Validation import *
 from decimal import Decimal
 
 class Collection:
@@ -112,8 +113,7 @@ def file_to_arr(mas, File, FileName): #the main function to get data from file
                 if i.upper().find("AMOUNT")!= -1:    lst[j] = str(round(Decimal(float(lst[j])),2))
                 setattr(temp, i, lst[j])
                 j += 1
-        if validate_obj(temp):
-            mas.add(temp)
+        if validate_obj(temp):  mas.add(temp)
         else: print("Object with name",str(temp.getACCOUNT_HOLDER()),"was skipped due to not valid data!")
         temp = SwiftTransfer()#create a new SwiftTransfer object every time
 
@@ -174,26 +174,32 @@ def menu(lst, File_name):
 
 def validate_obj(obj):
     try:
-        if not Validation().digit_check(obj.getAMOUNT()) or not Validation().low_up_limit_check(obj.getAMOUNT(), -1):   raise TypeError
-        if not Validation().digit_check(obj.getID()) or not Validation().low_up_limit_check(obj.getID(), -1):   raise TypeError
-        if not Validation().digit_check(obj.getFEE_AMOUNT()) or not Validation().low_up_limit_check(obj.getFEE_AMOUNT(), -1, obj.getAMOUNT()):  raise TypeError
-        if not Validation().char_check(obj.getCURRENCY()) or not Validation().space_count(obj.getCURRENCY(),0): raise TypeError
-        if not Validation().date_check(obj.getPAYMENT_DATE()):  raise TypeError
-        if not Validation().iban_number_check(obj.getIBAN_NUMBER()):    raise TypeError
-        if not Validation().char_check(obj.getACCOUNT_HOLDER()) or not Validation().space_count(obj.getACCOUNT_HOLDER(), 1):    raise TypeError
-    except (TypeError, ValueError): return False
-    except AttributeError:  return False
-    return True
-
-def validate_lst(lst): #the main validation function
-    try:
-        for i in range(lst.len()-1):  validate_obj(lst[i])
-    except (TypeError,ValueError):
+        if not Validation().digit_check(obj.getAMOUNT()) or not Validation().low_up_limit_check(obj.getAMOUNT(),-1, 10**10):
+            raise TypeError
+        if not Validation().digit_check(obj.getID()) or not Validation().low_up_limit_check(obj.getID(), -1, 10**10):
+            raise TypeError
+        if not Validation().digit_check(obj.getFEE_AMOUNT()) or not Validation().low_up_limit_check(obj.getFEE_AMOUNT(), -1, obj.getAMOUNT()):
+            raise TypeError
+        if not Validation().char_check(obj.getCURRENCY()) or not Validation().space_count(obj.getCURRENCY(),0):
+            raise TypeError
+        if not Validation().date_check(obj.getPAYMENT_DATE()):
+            raise TypeError
+        if not Validation().iban_number_check(obj.getIBAN_NUMBER()):
+            raise TypeError
+        if not Validation().char_check(obj.getACCOUNT_HOLDER()) or not Validation().space_count(obj.getACCOUNT_HOLDER(), 1):
+            raise TypeError
+    except (TypeError, ValueError):
         print("\n=[Make sure, data type is correct and try again!]=\n")
         return False
     except AttributeError:
         print("\n=[Input correct attribute!]=\n")
         return False
+    return True
+
+def validate_lst(lst): #the main validation function
+    for i in range(lst.len()):
+        if not validate_obj(lst[i]):
+            return False
     return True
 
 #main
