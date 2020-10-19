@@ -21,11 +21,14 @@ def menu():
         if choice == 2:
             contex.setStrategy(ConcreteStrategyFile())
         if choice == 3:
+            if contex.getStrategy() is None:
+                print("Choose a strategy first!")
+                continue
             contex.execudeStrategy(List)
             List.display()
         if choice == 4:
             if List.length() == 0:
-                print("Your list is already empty!")
+                print("Your list is empty!")
                 continue
             index = input("Index: ")
             while not v.digit_check(index):
@@ -39,7 +42,7 @@ def menu():
             List.erase(index)
         if choice == 5:
             if List.length() == 0:
-                print("Your list is already empty!")
+                print("Your list is empty!")
                 continue
             start = 1
             end = 0
@@ -69,7 +72,7 @@ def menu():
             List.cut(start,end)
         if choice == 6:
             if List.length() == 0:
-                print("Your list is already empty!")
+                print("Your list is empty!")
                 continue
             user_choice(List)
         if choice == 7:
