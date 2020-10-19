@@ -83,5 +83,7 @@ class Contex:
         self.strategy = strat
     def setStrategy(self, strat: Strategy):
         self.strategy = strat
+    def getStrategy(self):
+        return self.strategy
     def execudeStrategy(self,lst):
         return self.strategy.insert(lst)
