@@ -2,51 +2,6 @@ from LinkedList import*
 from Validation import*
 import random #for generating random nums
 
-# class node:
-#     def __init__(self,data=None):
-#         self.data=data
-#         self.next=None
-#
-# class linked_list:
-#     def __init__(self):
-#         self.head=node()
-#
-#     def append(self,data):#add data to list
-#         new_node=node(data)#create new node with "data"
-#         cur=self.head
-#         while cur.next is not None:
-#             cur=cur.next
-#         cur.next=new_node#if list was empty
-#
-#     def len(self):#return integer value of list's length
-#         cur=self.head
-#         total=0 #counter
-#         while cur.next is not None:
-#             total+=1
-#             cur=cur.next
-#         return total
-#
-#     def display(self): #the same as print(list)
-#         elems=[]
-#         cur_node=self.head
-#         while cur_node.next is not None:
-#             cur_node=cur_node.next
-#             elems.append(cur_node.data) #append every node to empty list
-#         print(elems) #print list
-#
-#     def get(self,index): #return data by index
-#         if index>=self.len() or index<0: #index is out of range
-#                     return None
-#         cur_idx=0 #counter
-#         cur_node=self.head
-#         while True:
-#             cur_node=cur_node.next
-#             if cur_idx==index: return cur_node.data #we found it
-#             cur_idx+=1
-#
-#     def __getitem__(self,index): #acsess by index (arr[])
-#         return self.get(index) #call get method
-
 def find_demical(binary):
     i = x = 1
     if int(binary) == 0:#exceprion
@@ -71,8 +26,6 @@ def create_z(x, y, N):
         if x[i] > y[i]: z.append("1")
         else:   z.append("0")
         i += 1
-    # if z.length() == 0:#if lengths of lists aren't same, ValueError will be raise
-    #     raise ValueError
     print("X: ")
     x.display()
     print("Y: ")
@@ -87,8 +40,6 @@ def create_z(x, y, N):
 def input_with_N(lst):
     x = lst
     v = Validation()
-    # x = linked_list()
-    # N = int(input("Input N: "))
     y = LinkedList()
     N = x.length()
     start = input("START:")
@@ -119,8 +70,6 @@ def input_with_N(lst):
                     end = input("End must be a number: ")
                 break
     end = int(end)
-    # for i in range(N):#generate nums for "x"
-    #     x.append(random.randint(a,b))
     for j in range(N):#generate nums for "y"
         y.append(random.randint(start,end))
     result = create_z(x, y, N)
@@ -128,13 +77,6 @@ def input_with_N(lst):
 
 def input_without_N(lst):
     x = lst
-    # x = linked_list()
-    # print("Input X(double ENTER to stop): ")
-    # while True:#while user will not input "ENTER", he enters a list
-    #     temp = input()
-    #     if temp == "":
-    #         break
-    #     x.append(float(temp))
     v = Validation()
     y = LinkedList()
     first_iter = True
@@ -171,20 +113,3 @@ def user_choice(lst):
             print(input_without_N(lst))
         if choice != "1" and choice != "2":#user can quit main menu
             return
-#
-# def validate_start(lst):
-#     check = False
-#     while not check: #create infinity loop in order to user finally input correct data
-#         try:
-#             user_choice(lst) #main function
-#             check = True
-#         except ValueError:
-#             check = False
-#             print("N must be a natural number!")
-#         except (IndexError, TypeError):
-#             check = False
-#             print("Sizes of lists must be same!")
-#         except NameError:
-#             check = False
-#             print("\"From\" must be lower than \"To\"!")
-#     return True
