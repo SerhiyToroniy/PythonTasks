@@ -1,3 +1,5 @@
+from Validation_with_decorators import *
+
 class SwiftTransfer:
 
     def __init__(self, ident = None, iban_number = None, account_holder = None, amount = None, currency = None, fee_amount = None, payment_date = None):
@@ -12,7 +14,7 @@ class SwiftTransfer:
     def __str__(self):#possibility to use "print(SwiftTransfer())"
         result = ""
         for i in dir(self):
-            if i[0]+i[1]!="ge" and i[0]+i[1]!="se" and i[0]+i[1]!="__":   result+=i.upper() + ": " + str(getattr(self,i)) + "\n"
+            if not i.startswith("get") and not i.startswith("set") and not i.startswith("__"):   result+=i.upper() + ": " + str(getattr(self,i)) + "\n"
         return result
 
     #getters for every single attribute of our class
@@ -32,17 +34,28 @@ class SwiftTransfer:
         return self.payment_date
 
     #setters for every single attribute of our class
+    @Validation.digit_check
     def setID(self, var):
         self.ident = var
+    @Validation.iban_number_check
     def setIBAN_NUMBER(self, var):
         self.iban_number = var
+    @Validation.char_check
+    @Validation.space_count
+    @Validation.name_check
     def setACCOUNT_HOLDER(self, var):
         self.account_holder = var
+    @Validation.digit_check
+    @Validation.low_up_limit_check
     def setAMOUNT(self, var):
         self.amount = var
+    @Validation.char_check
+    @Validation.space_count
     def setCURRENCY(self, var):
         self.currency = var
+    @Validation.digit_check
     def setFEE_AMOUNT(self, var):
         self.fee_amount = var
+    @Validation.date_check
     def setPAYMENT_DATE(self, var):
         self.payment_date = var
