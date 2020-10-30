@@ -1,4 +1,17 @@
+from enums import Currency
+
 class Validation:
+
+    @staticmethod
+    def currency_check(var):
+        check = False
+        for cur in Currency:
+            if var == cur.name:
+                check = True
+        if not check:
+            print("Currency must be only uah, eur and usd!")
+            return False
+        return True
 
     @staticmethod
     def digit_check(var):
