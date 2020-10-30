@@ -1,6 +1,6 @@
 import operator #import operator to use it in the sort method
 import os.path
-from SwiftTransfer import * #import class SwiftTransfer
+from SwiftTransfer4 import * #import class SwiftTransfer
 from Validation import *
 from decimal import Decimal
 
@@ -53,7 +53,7 @@ class Collection:
         for i in self.data:
             check = False
             for j in dir(i):
-                if j[0]+j[1]!="ge" and j[0]+j[1]!="se" and j[0]+j[1]!="__"and (getattr(i,j).upper().find(line.upper())!=-1):  check = True #find any kind of our line
+                if not j.startswith("get") and not j.startswith("set") and not j.startswith("__") and (getattr(i,j).upper().find(line.upper())!=-1):  check = True #find any kind of our line
             if check:   temp.append(i) #
         if len(temp)==0: print("We couldn't find it :( ")
         else:
@@ -63,7 +63,7 @@ class Collection:
         our_key = ""
         i = self.data[0]
         for j in dir(i):
-            if j[0]+j[1]!="ge" and j[0]+j[1]!="se" and j[0]+j[1]!="__" and (j.upper().find(attr.upper()) != -1):
+            if not j.startswith("get") and not j.startswith("set") and not j.startswith("__") and (j.upper().find(attr.upper()) != -1):
                 our_key = j
                 break
         return sorted(self.data, key = operator.attrgetter(our_key)) #using "operator" to get an attribute name
@@ -108,7 +108,7 @@ def file_to_arr(mas, File, FileName): #the main function to get data from file
     j = 0
     while j != len(lst):
         for i in dir(temp):
-            if i[0]+i[1]!="ge" and i[0]+i[1]!="se" and i[0]+i[1]!="__":
+            if not i.startswith("get") and not i.startswith("set") and not i.startswith("__"):
                 if i.upper().find("AMOUNT")!= -1:    lst[j] = str(round(Decimal(float(lst[j])),2))
                 setattr(temp, i, lst[j])
                 j += 1
@@ -121,7 +121,7 @@ def arr_to_file(lst, File_name):
     File = open(File_name, "w") #check whether file exists was in #main
     for j in lst:  # updating data.txt file
         for h in dir(j):
-            if h[0]+h[1]!="ge" and h[0]+h[1]!="se" and h[0]+h[1]!="__": File.writelines(getattr(j, h) + "\n")
+            if not h.startswith("get") and not h.startswith("set") and not h.startswith("__"): File.writelines(getattr(j, h) + "\n")
     File.close()
 
 def menu(lst, File_name):
@@ -177,7 +177,7 @@ def validate_obj(obj):
         if not Validation().digit_check(obj.getAMOUNT()) or not Validation().low_up_limit_check(obj.getAMOUNT(), -1):   raise TypeError
         if not Validation().digit_check(obj.getID()) or not Validation().low_up_limit_check(obj.getID(), -1):   raise TypeError
         if not Validation().digit_check(obj.getFEE_AMOUNT()) or not Validation().low_up_limit_check(obj.getFEE_AMOUNT(), -1, obj.getAMOUNT()):  raise TypeError
-        if not Validation().char_check(obj.getCURRENCY()) or not Validation().space_count(obj.getCURRENCY(),0): raise TypeError
+        if not Validation().char_check(obj.getCURRENCY()) or not Validation().space_count(obj.getCURRENCY(),0) or not Validation().currency_check(obj.getCURRENCY()): raise TypeError
         if not Validation().date_check(obj.getPAYMENT_DATE()):  raise TypeError
         if not Validation().iban_number_check(obj.getIBAN_NUMBER()):    raise TypeError
         if not Validation().char_check(obj.getACCOUNT_HOLDER()) or not Validation().space_count(obj.getACCOUNT_HOLDER(), 1):    raise TypeError
@@ -196,12 +196,13 @@ def validate_lst(lst): #the main validation function
         return False
     return True
 
-#main
-arr = Collection()
-file_name = input("Input name of data file: ")
-if not os.path.exists(file_name):   print("FILE \"",file_name,"\" DOESN'T EXIST!")
-else:
-    file = open(file_name)
-    file_to_arr(arr, file, file_name)
-    file.close()
-    menu(arr, file_name)
+if __name__ == "__main__":
+    arr = Collection()
+    file_name = input("Input name of data file: ")
+    while not os.path.exists(file_name):
+        file_name = input("FILE DOESN'T EXIST: ")
+    else:
+        file = open(file_name)
+        file_to_arr(arr, file, file_name)
+        file.close()
+        menu(arr, file_name)
