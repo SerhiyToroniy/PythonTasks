@@ -1,6 +1,9 @@
 from Validation import *
 from Strategy import *
+from Logger import *
+from Event import *
 import os.path
+import copy
 
 class ConcreteStrategyFile(Strategy):
 
@@ -8,6 +11,7 @@ class ConcreteStrategyFile(Strategy):
     @Validation.file_check
     @Validation.index_check
     def insert(lst, filename, index):
+        save_index = copy.copy(index)
         file = open(filename)
         temp = file.read().split("\n")
         file.close()
@@ -28,3 +32,5 @@ class ConcreteStrategyFile(Strategy):
         for i in correct:
             lst.insert(index, i)
             index += 1
+        e = Event()
+        e.run("add",save_index,correct,lst)

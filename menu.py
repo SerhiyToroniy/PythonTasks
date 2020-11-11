@@ -1,8 +1,20 @@
-from PatternStrategy import *
+from Strategy import *
 from LinkedList_task3 import *
 from Validation import *
+from LinkedList import *
+from Contex import *
+from ConcreteStrategyFile import *
+from ConcreteStrategyIterator import *
+from Logger import *
+from Event import *
 
 def menu():
+    e = Event()
+    o = Observer()
+    log = Logger()
+    o.attach("add", log.printToFile)
+    o.attach("delete", log.printToFile)
+    o.attach("changed", log.printToFile)
     contex = Contex()
     List = LinkedList()
     v = Validation()
@@ -22,7 +34,7 @@ def menu():
             contex.setStrategy(ConcreteStrategyFile())
         if choice == 3:
             if contex.getStrategy() is None:
-                print("Choose a strategy first!")
+                print("Choose a first!")
                 continue
             contex.execudeStrategy(List)
             List.display()
@@ -39,7 +51,8 @@ def menu():
                 while not v.digit_check(index):
                     index = input("Index must be a positive number: ")
                 index = int(index)
-            List.erase(index)
+            newLst = List.erase(index)
+            e.run("delete",index, newLst,List)
         if choice == 5:
             if List.length() == 0:
                 print("Your list is empty!")
@@ -69,12 +82,14 @@ def menu():
                         end = input("End must be a positive number: ")
                     end = int(end)
                 first_iter = False
-            List.cut(start,end)
+                newLst = List.cut(start,end)
+                e.run("delete", list(range(start, end + 1)), newLst, List)
         if choice == 6:
             if List.length() == 0:
                 print("Your list is empty!")
                 continue
             user_choice(List)
+            log.printToFile("changed")
         if choice == 7:
             List.display()
         if choice == 8:

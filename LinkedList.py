@@ -1,3 +1,5 @@
+import copy
+
 class node:
     def __init__(self,data=None):
         self.data=data
@@ -21,6 +23,14 @@ class LinkedList:
             total+=1
             cur=cur.next
         return total
+
+    def __str__(self):
+        elems = []
+        cur_node = self.head
+        while cur_node.next is not None:
+            cur_node = cur_node.next
+            elems.append(cur_node.data)  # append every node to empty list
+        return str(elems)  # print list
 
     def display(self): #the same as print(list)
         elems=[]
@@ -68,13 +78,18 @@ class LinkedList:
             last_node = cur_node
             cur_node = cur_node.next
             if cur_idx == index:
+                element = copy.copy(cur_node.data)
                 last_node.next = cur_node.next
-                return
+                return element
             cur_idx += 1
+        return element
 
     def cut(self, start, end):
         if start >= end:
             start, end = end, start
+        temp = []
         for i in range(end+1):
             if i >= start:
+                temp.append(self.get(start))
                 self.erase(start)
+        return temp
