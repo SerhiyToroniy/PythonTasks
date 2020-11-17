@@ -7,6 +7,7 @@ from ConcreteStrategyFile import *
 from ConcreteStrategyIterator import *
 from Logger import *
 from Event import *
+import copy
 
 def menu():
     e = Event()
@@ -88,8 +89,9 @@ def menu():
             if List.length() == 0:
                 print("Your list is empty!")
                 continue
-            user_choice(List)
-            log.printToFile("changed")
+            saveList = copy.deepcopy(List)
+            decimal = user_choice(List)
+            e.run("changed", decimal, List, saveList)
         if choice == 7:
             List.display()
         if choice == 8:
