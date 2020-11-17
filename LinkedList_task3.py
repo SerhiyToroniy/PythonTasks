@@ -1,6 +1,7 @@
 from LinkedList import*
 from Validation import*
 import random #for generating random nums
+import copy
 
 def find_demical(binary):
     i = x = 1
@@ -23,8 +24,8 @@ def create_z(x, y, N):
     z = LinkedList()
     i = 0 #iterator to compare lists
     while i < N:#create z according to the task
-        if x[i] > y[i]: z.append("1")
-        else:   z.append("0")
+        if x[i] > y[i]: z.append(1)
+        else:   z.append(0)
         i += 1
     print("X: ")
     x.display()
@@ -32,16 +33,19 @@ def create_z(x, y, N):
     y.display()
     print("Z: ")
     z.display()
+    while x.length()!=0:
+        x.erase(x.length()-1)
+    for i in range(z.length()):
+        x.append(z[i])
     binary = ""
     for u in range(z.length()):
-        binary+=z[u]
+        binary+=str(z[u])
     return find_demical(binary)#call function to find out a decimal num
 
 def input_with_N(lst):
-    x = lst
     v = Validation()
     y = LinkedList()
-    N = x.length()
+    N = lst.length()
     start = input("START:")
     while not v.positive_check(start):
         start = input("Start must be a number: ")
@@ -72,7 +76,7 @@ def input_with_N(lst):
     end = int(end)
     for j in range(N):#generate nums for "y"
         y.append(random.randint(start,end))
-    result = create_z(x, y, N)
+    result = create_z(lst, y, N)
     return result
 
 def input_without_N(lst):
@@ -105,11 +109,14 @@ def input_without_N(lst):
     return result
 
 def user_choice(lst):
+    result = None
     while True:
         choice = input("Input \"1\" for generating list or input \"2\" to create your own list(input smth else to quit): ")#user inputs his own choice how to create lists
         if choice == "1":#user inputs only size
-            print(input_with_N(lst))
+            result = input_with_N(lst)
+            print(result)
         if choice == "2":#user inputs only lists
-            print(input_without_N(lst))
+            result = input_without_N(lst)
+            print(result)
         if choice != "1" and choice != "2":#user can quit main menu
-            return
+            return result
