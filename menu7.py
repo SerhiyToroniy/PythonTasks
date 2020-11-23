@@ -7,8 +7,38 @@ from ConcreteStrategyFile7 import *
 from ConcreteStrategyIterator7 import *
 from Logger import *
 from Event import *
-import threading
+import concurrent.futures
 import copy
+
+def tothread(state, arrs, lists, names, _index, _e):
+    savedList = copy.deepcopy(lists)
+    results = []
+    j = 0
+    try:
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            if isinstance(_index, tuple):
+                for i in range(len(lists)):
+                    results.append(executor.submit(arrs[0], lists[i], _index[j], _index[j+1]))
+                lists.reverse()
+                for f in concurrent.futures.as_completed(results):
+                    binary,lst = f.result()
+                    _e.run(f"{state}({names[j]})", binary, lst, lists[j])
+                    j += 1
+            else:
+                for i in arrs:
+                    if isinstance(_index, list) and len(_index) > 1:results.append(executor.submit(i, _index[j], _index[j+1]))
+                    else: results.append(executor.submit(i, _index))
+                for p in concurrent.futures.as_completed(results):
+                    if p.result() is None:
+                        raise IndexError
+                for f in concurrent.futures.as_completed(results):
+                    _e.run(f"{state}({names[j]})", _index, f.result(), lists[j])
+                    j += 1
+    except IndexError:
+        print("Index is out of range!")
+        return savedList
+
+
 
 def menu():
     e = Event()
@@ -55,21 +85,8 @@ def menu():
                 while not v.digit_check(index):
                     index = input("Index must be a positive number: ")
                 index = int(index)
-            saveListIterator = copy.deepcopy(ListIterator)
-            saveListFile = copy.deepcopy(ListFile)
-            p1 = threading.Thread(target=ListIterator.erase, args=[index])
-            p2 = threading.Thread(target=ListFile.erase, args=[index])
-            p1.start()
-            p2.start()
-            p1.join()
-            p2.join()
-            if saveListIterator.length() == ListIterator.length() or saveListFile.length() == ListFile.length():
-                ListIterator=saveListIterator
-                ListFile=saveListFile
-                print("Index is out of range!")
-            else:
-                e.run("delete(ListIterator)", index, ListIterator, saveListIterator)
-                e.run("delete(ListFile)", index, ListFile, saveListFile)
+            result = tothread("delete",[ListFile.erase, ListIterator.erase],[ListIterator, ListFile],["ListIterator","ListFile"],index, e)
+            if not result is None:  ListIterator, ListFile = result
         if choice == 5:
             if ListFile.length() == 0 or ListIterator.length() == 0:
                 print("One of lists is empty!")
@@ -84,50 +101,33 @@ def menu():
                 while not v.digit_check(start):
                     start = input("Start must be a positive number: ")
                 start = int(start)
-                while start > ListFile.length() or start > ListIterator.length() or start < 0:
-                    index = input("Start must be in list range: ")
-                    while not v.digit_check(index):
-                        index = input("Start must be a positive number: ")
+                while start >= ListFile.length() or start >= ListIterator.length() or start < 0:
+                    start = input("Start must be in list range: ")
+                    while not v.digit_check(start):
+                        start = input("Start must be a positive number: ")
                     start = int(start)
                 end = input("END:")
                 while not v.digit_check(end):
                     end = input("End must be a positive number: ")
                 end = int(end)
-                while end > ListFile.length() or end > ListIterator.length() or end < 0:
+                while end >= ListFile.length() or end >= ListIterator.length() or end < 0:
                     end = input("End must be in list range: ")
                     while not v.digit_check(end):
                         end = input("End must be a positive number: ")
                     end = int(end)
                 first_iter = False
-                saveListIterator = copy.deepcopy(ListIterator)
-                saveListFile = copy.deepcopy(ListFile)
-                p1 = threading.Thread(target=ListIterator.cut, args=[start,end])
-                p2 = threading.Thread(target=ListFile.cut, args=[start,end])
-                p1.start()
-                p2.start()
-                p1.join()
-                p2.join()
-                if saveListIterator.length() == ListIterator.length() or saveListFile.length() == ListFile.length():
-                    ListIterator = saveListIterator
-                    ListFile = saveListFile
-                    print("Index is out of range!")
-                else:
-                    e.run("delete(ListIterator)", list(range(start, end + 1)), ListIterator, saveListIterator)
-                    e.run("delete(ListFile)", list(range(start, end + 1)), ListFile, saveListFile)
+            result = tothread("delete", [ListFile.cut, ListIterator.cut], [ListIterator, ListFile],["ListIterator", "ListFile"], [start,end], e)
+            if not result is None:  ListIterator, ListFile = result
         if choice == 6:
-            if ListFile.length() == 0 or ListIterator.length() == 0:
-                print("One of lists is empty!")
-                continue
-            saveListIterator = copy.deepcopy(ListIterator)
-            saveListFile = copy.deepcopy(ListFile)
-            p1 = threading.Thread(target=user_choice, args=[ListIterator])
-            p1.start()
-            p1.join()
-            p2 = threading.Thread(target=user_choice, args=[ListFile])
-            p2.start()
-            p2.join()
-            e.run("changed(ListIterator)",0,ListIterator, saveListIterator)
-            e.run("changed(ListFile)",0,ListFile, saveListFile)
+            start = input("START:")
+            while not v.digit_check(start):
+                start = input("Start must be a positive number: ")
+            start = int(start)
+            end = input("END:")
+            while not v.digit_check(end):
+                end = input("End must be a positive number: ")
+            end = int(end)
+            tothread("changed", [user_choice], [ListFile, ListIterator], ["ListIterator", "ListFile"], (start,end), e)
         if choice == 7:
             print("ListFile:")
             ListFile.display()
