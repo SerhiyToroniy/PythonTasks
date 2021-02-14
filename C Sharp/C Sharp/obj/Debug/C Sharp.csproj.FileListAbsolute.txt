@@ -1,7 +1,0 @@
-D:\GitHub Desktop (Repositories)\PythonTasks\C Sharp\C Sharp\bin\Debug\C Sharp.exe.config
-D:\GitHub Desktop (Repositories)\PythonTasks\C Sharp\C Sharp\bin\Debug\C Sharp.exe
-D:\GitHub Desktop (Repositories)\PythonTasks\C Sharp\C Sharp\bin\Debug\C Sharp.pdb
-D:\GitHub Desktop (Repositories)\PythonTasks\C Sharp\C Sharp\obj\Debug\C Sharp.csprojAssemblyReference.cache
-D:\GitHub Desktop (Repositories)\PythonTasks\C Sharp\C Sharp\obj\Debug\C Sharp.csproj.CoreCompileInputs.cache
-D:\GitHub Desktop (Repositories)\PythonTasks\C Sharp\C Sharp\obj\Debug\C Sharp.exe
-D:\GitHub Desktop (Repositories)\PythonTasks\C Sharp\C Sharp\obj\Debug\C Sharp.pdb
