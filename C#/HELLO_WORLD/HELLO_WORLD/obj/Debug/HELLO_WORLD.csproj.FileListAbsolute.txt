@@ -1,7 +1,0 @@
-D:\GitHub Desktop (Repositories)\PythonTasks\C#\HELLO_WORLD\HELLO_WORLD\bin\Debug\HELLO_WORLD.exe.config
-D:\GitHub Desktop (Repositories)\PythonTasks\C#\HELLO_WORLD\HELLO_WORLD\bin\Debug\HELLO_WORLD.exe
-D:\GitHub Desktop (Repositories)\PythonTasks\C#\HELLO_WORLD\HELLO_WORLD\bin\Debug\HELLO_WORLD.pdb
-D:\GitHub Desktop (Repositories)\PythonTasks\C#\HELLO_WORLD\HELLO_WORLD\obj\Debug\HELLO_WORLD.csprojAssemblyReference.cache
-D:\GitHub Desktop (Repositories)\PythonTasks\C#\HELLO_WORLD\HELLO_WORLD\obj\Debug\HELLO_WORLD.csproj.CoreCompileInputs.cache
-D:\GitHub Desktop (Repositories)\PythonTasks\C#\HELLO_WORLD\HELLO_WORLD\obj\Debug\HELLO_WORLD.exe
-D:\GitHub Desktop (Repositories)\PythonTasks\C#\HELLO_WORLD\HELLO_WORLD\obj\Debug\HELLO_WORLD.pdb
